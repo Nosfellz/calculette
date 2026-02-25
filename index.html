@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculateur — Trousse de secours</title>
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.12);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(99,102,241,.45), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(236,72,153,.35), transparent 60%),
+        radial-gradient(900px 700px at 40% 110%, rgba(34,197,94,.25), transparent 55%),
+        var(--bg);
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 24px;
+    }
+
+    .wrap{
+      width:min(980px, 100%);
+      display:grid;
+      gap: 16px;
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      flex:1;
+      min-width:0;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(22px, 2.2vw, 30px);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+      max-width: none;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.20);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: rgba(34,197,94,.95);
+      box-shadow: 0 0 0 4px rgba(34,197,94,.15);
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .table{
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table thead th{
+      text-align:left;
+      font-weight: 600;
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+      padding: 16px 18px;
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table tbody td{
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .table tbody tr:hover td{
+      background: rgba(255,255,255,.04);
+    }
+
+    .item{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .badge{
+      width: 34px; height: 34px;
+      display:grid;
+      place-items:center;
+      border-radius: 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 18px rgba(0,0,0,.20);
+      flex: 0 0 auto;
+      font-size: 16px;
+    }
+
+    .muted{ color: var(--muted); font-weight: 500; }
+
+    .price, .total{
+      font-variant-numeric: tabular-nums;
+      text-align:right;
+      white-space: nowrap;
+    }
+
+    .qty{
+      display:flex;
+      justify-content:flex-end;
+      gap: 10px;
+      align-items:center;
+    }
+
+    .qty input{
+      width: 120px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline: none;
+      text-align: right;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      transition: border-color .15s ease, transform .08s ease, background .15s ease;
+    }
+    .qty input:focus{
+      border-color: rgba(99,102,241,.75);
+      background: rgba(0,0,0,.25);
+    }
+    .qty input:active{ transform: scale(.99); }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .grand{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      align-items:center;
+      text-align:center;
+    }
+    .grand span:first-child{
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .grand strong{
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btns{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content:space-between;
+      align-items:center;
+      width:100%;
+    }
+
+    button{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.11); }
+    button:active{ transform: translateY(1px); }
+
+    .primary{
+      border-color: rgba(99,102,241,.55);
+      background: rgba(99,102,241,.22);
+    }
+    .primary:hover{ background: rgba(99,102,241,.28); }
+
+    .foot{
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    @media (max-width: 760px){
+      .table thead{ display:none; }
+      .table, .table tbody, .table tr, .table td{ display:block; width:100%; }
+      .table tr{ border-bottom: 1px solid var(--border); }
+      .table tbody td{ border-bottom: none; padding: 12px 16px; }
+      .table tbody td.price, .table tbody td.total{ text-align:left; }
+      .qty{ justify-content:flex-start; }
+      .qty input{ width: 100%; }
+      .actions{ justify-content:flex-start; }
+      .btns{
+        width:100%;
+        justify-content:space-between;
+        align-items:flex-end;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">
+        <h1>Calculatrice</h1>
+        <p class="subtitle">Pour vous faciliter la vie, entrez les quantités souhaitées et le total apparaitra automatiquement.</p>
+        <p class="subtitle">⚡ 10 unités au total par personne</p>
+        <p class="subtitle">⚡ Services publics & entreprises : la Direction</p>
+
+      </div>
+      <div class="pill" title="Calcul en direct">
+        <span class="dot"></span>
+        <span>Mise à jour instantanée</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="table" aria-label="Tableau produits">
+        <thead>
+          <tr>
+            <th>Matériel de premiers soins</th>
+            <th style="text-align:right;">Prix unitaire</th>
+            <th style="text-align:right;">Quantité</th>
+            <th style="text-align:right;">Total</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr>
+            <td>
+              <div class="item">
+                <div class="badge">🧴</div>
+                <div>
+                  <div>Désinfectant</div>
+                  <div class="muted">Hygiène & antisepsie</div>
+                </div>
+              </div>
+            </td>
+            <td class="price" data-prix="70">70 $</td>
+            <td class="qty">
+              <input inputmode="numeric" type="text" pattern="[0-9]*" value="" aria-label="Quantité Désinfectant">
+            </td>
+            <td class="total">0 $</td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="item">
+                <div class="badge">🧴</div>
+                <div>
+                  <div>Gel Cicatrisant</div>
+                  <div class="muted">Soin & réparation</div>
+                </div>
+              </div>
+            </td>
+            <td class="price" data-prix="100">100 $</td>
+            <td class="qty">
+              <input inputmode="numeric" type="text" pattern="[0-9]*" value="" aria-label="Quantité Gel Cicatrisant">
+            </td>
+            <td class="total">0 $</td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="item">
+                <div class="badge">🩹</div>
+                <div>
+                  <div>Bandage</div>
+                  <div class="muted">Protection & maintien</div>
+                </div>
+              </div>
+            </td>
+            <td class="price" data-prix="100">100 $</td>
+            <td class="qty">
+              <input inputmode="numeric" type="text" pattern="[0-9]*" value="" aria-label="Quantité Bandage">
+            </td>
+            <td class="total">0 $</td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="item">
+                <div class="badge">🦴</div>
+                <div>
+                  <div>Attelle</div>
+                  <div class="muted">Immobilisation</div>
+                </div>
+              </div>
+            </td>
+            <td class="price" data-prix="130">130 $</td>
+            <td class="qty">
+              <input inputmode="numeric" type="text" pattern="[0-9]*" value="" aria-label="Quantité Attelle">
+            </td>
+            <td class="total">0 $</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <div class="btns">
+          <button type="button" id="reset">Réinitialiser</button>
+          <div class="grand">
+            <span>Total général</span>
+            <strong id="grandTotal">0 $</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot"><em>Fait avec ♥️ que pour vous</em></div>
+  </div>
+
+  <script>
+    const money = new Intl.NumberFormat('fr-FR', {
+      maximumFractionDigits: 0
+    });
+
+    function formatMoney(value) {
+      return `${money.format(value)} $`;
+    }
+
+    function calc() {
+      let grand = 0;
+      document.querySelectorAll('#rows tr').forEach(tr => {
+        const price = Number(tr.querySelector('.price').dataset.prix);
+        const rawQty = tr.querySelector('input').value;
+        const qty = Math.max(0, Number(rawQty || 0));
+        const line = price * qty;
+        tr.querySelector('.total').textContent = formatMoney(line);
+        grand += line;
+      });
+      document.getElementById('grandTotal').textContent = formatMoney(grand);
+    }
+
+    // Saisie chiffres uniquement + mise à jour instantanée
+    document.querySelectorAll('#rows input').forEach(inp => {
+      inp.addEventListener('input', () => {
+        inp.value = inp.value.replace(/\D+/g, '');
+        calc();
+      });
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      document.querySelectorAll('#rows input').forEach(i => i.value = '');
+      calc();
+    });
+
+    // Calcul initial
+    calc();
+  </script>
+</body>
+</html>
