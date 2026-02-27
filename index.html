@@ -158,17 +158,14 @@
       outline-offset: 2px;
     }
 
-    .table tfoot .enterprise-cell{
-      text-align: left;
-    }
-
-    .table tfoot .enterprise-cell .enterprise-option{
-      margin-left: var(--item-text-offset);
-      color: rgba(40,68,54,.78);
-    }
-
     .table tfoot .total-cell{
       text-align: center;
+    }
+
+    .table tfoot .total-cell .enterprise-option{
+      margin-top: 10px;
+      justify-content: center;
+      color: rgba(40,68,54,.78);
     }
 
     .pill{
@@ -306,10 +303,14 @@
       text-align:center;
     }
 
+    .table tfoot td:nth-child(3){
+      vertical-align: top;
+    }
+
     .table tfoot .grand-qty{
       display:flex;
       flex-direction:column;
-      gap: 0;
+      gap: 4px;
       align-items:center;
       text-align:center;
     }
@@ -323,6 +324,7 @@
     .table tfoot #grandQty{
       color: #ffffff;
       font-size: 20px;
+      font-weight: 400;
       line-height: 1;
       letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
@@ -331,7 +333,7 @@
     .table tfoot .grand-total{
       display:flex;
       flex-direction:column;
-      gap: 0;
+      gap: 4px;
       align-items:center;
       text-align:center;
     }
@@ -348,6 +350,25 @@
       line-height: 1;
       letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
+    }
+
+    button{
+      border: 1px solid rgba(34,58,47,.22);
+      background: rgba(255,255,255,.60);
+      color: #1a3127;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.82); }
+    button:active{ transform: translateY(1px); }
+
+    #reset{
+      margin-left: var(--item-text-offset);
+      border-color: rgba(34,58,47,.30);
+      background: rgba(255,255,255,.76);
     }
 
     .primary{
@@ -456,8 +477,9 @@
     }
 
     #totalWeight{
-      color: #1f5f7c;
+      color: #ffffff;
       font-size: 17px;
+      font-weight: 400;
       line-height: 1;
       letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
@@ -479,7 +501,7 @@
       .table tfoot td:first-child{ padding-top: 10px; }
       .table tfoot td:nth-child(3),
       .table tfoot td:nth-child(4){ text-align:center; }
-      .table tfoot .enterprise-cell .enterprise-option{ margin-left: 0; }
+      #reset{ margin-left: 0; }
       .invoice-body{
         align-items: stretch;
         grid-template-columns: 1fr;
@@ -605,13 +627,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td class="enterprise-cell">
-              <label for="isEnterprise" class="enterprise-option">
-                <input type="checkbox" id="isEnterprise">
-                <span class="enterprise-switch" aria-hidden="true"></span>
-                <span>Entreprise</span>
-              </label>
-            </td>
+            <td><button type="button" id="reset">Réinitialiser</button></td>
             <td></td>
             <td>
               <div class="grand-qty">
@@ -624,6 +640,11 @@
                 <span>Total général</span>
                 <strong id="grandTotal">0 $</strong>
               </div>
+              <label for="isEnterprise" class="enterprise-option">
+                <input type="checkbox" id="isEnterprise">
+                <span class="enterprise-switch" aria-hidden="true"></span>
+                <span>Entreprise</span>
+              </label>
             </td>
           </tr>
         </tfoot>
@@ -708,6 +729,11 @@
         inp.value = inp.value.replace(/\D+/g, '');
         calc();
       });
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      document.querySelectorAll('#rows input').forEach(i => i.value = '');
+      calc();
     });
 
     document.getElementById('isEnterprise').addEventListener('change', calc);
