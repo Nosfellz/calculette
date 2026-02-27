@@ -664,7 +664,7 @@
           <strong id="totalWeight">0 kg</strong>
         </div>
       </div>
-      <p class="invoice-copy-hint">1 clic gauche sur la ligne pour la copier automatiquement.</p>
+      <p class="invoice-copy-hint">1 clic gauche sur la ligne (ou Ctrl+C) pour copier exactement le texte.</p>
     </section>
 
     <div class="foot"><em>Fait avec ♥️ que pour vous</em></div>
@@ -740,30 +740,37 @@
 
     const invoiceLine = document.getElementById('invoiceLine');
 
-    function fallbackCopy(text) {
-      const area = document.createElement('textarea');
-      area.value = text;
-      area.setAttribute('readonly', '');
-      area.style.position = 'fixed';
-      area.style.opacity = '0';
-      document.body.appendChild(area);
-      area.select();
-      document.execCommand('copy');
-      document.body.removeChild(area);
+    function highlightCopyField() {
+      invoiceLine.select();
+      invoiceLine.setSelectionRange(0, invoiceLine.value.length);
     }
 
+    function fallbackCopyFromField() {
+      highlightCopyField();
+      document.execCommand('copy');
+    }
+
+    function markInvoiceCopied() {
+      invoiceLine.classList.add('copied');
+      setTimeout(() => invoiceLine.classList.remove('copied'), 450);
+    }
+
+    invoiceLine.addEventListener('focus', () => {
+      if (!invoiceLine.value) return;
+      highlightCopyField();
+    });
+
     invoiceLine.addEventListener('click', async () => {
-      const text = invoiceLine.value.trim();
-      if (!text) return;
+      if (!invoiceLine.value) return;
+      highlightCopyField();
 
       try {
         if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
+          await navigator.clipboard.writeText(invoiceLine.value);
         } else {
-          fallbackCopy(text);
+          fallbackCopyFromField();
         }
-        invoiceLine.classList.add('copied');
-        setTimeout(() => invoiceLine.classList.remove('copied'), 450);
+        markInvoiceCopied();
       } catch (_) {
         // Pas d'alerte: on garde une interaction silencieuse.
       }
@@ -774,3 +781,5 @@
   </script>
 </body>
 </html>
+
+
