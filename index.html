@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
   <title>Calculateur — Trousse de secours</title>
   <style>
     :root{
+      color-scheme: dark;
       --bg: #0f1e18;
       --card: rgba(255,255,255,.08);
       --card2: rgba(255,255,255,.12);
@@ -483,6 +485,118 @@
       line-height: 1;
       letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
+    }
+
+    /* Mode sombre force */
+    .card{
+      background:
+        radial-gradient(900px 420px at 14% -16%, rgba(140,182,159,.15), transparent 62%),
+        linear-gradient(180deg, #1c2f26 0%, #14241d 48%, #0f1d17 100%);
+      border: 1px solid rgba(160,205,180,.24);
+      box-shadow:
+        0 22px 56px rgba(0,0,0,.52),
+        0 0 0 1px rgba(255,255,255,.05) inset;
+    }
+
+    .table{
+      color: rgba(233,245,237,.94);
+    }
+
+    .table thead th{
+      color: rgba(233,245,237,.90);
+      background: rgba(10,21,16,.78);
+      border-bottom: 1px solid rgba(160,205,180,.24);
+    }
+
+    .table tbody td{
+      border-bottom: 1px solid rgba(160,205,180,.14);
+      background: rgba(13,26,20,.62);
+    }
+
+    .table tbody tr:hover td{
+      background: rgba(19,34,27,.86);
+    }
+
+    .table .muted{
+      color: rgba(196,219,206,.78);
+    }
+
+    .price, .total{
+      color: rgba(233,245,237,.95);
+    }
+
+    .qty input{
+      border: 1px solid rgba(160,205,180,.30);
+      background: rgba(7,16,12,.86);
+      color: rgba(241,249,244,.96);
+    }
+
+    .qty input:focus{
+      border-color: rgba(94,177,128,.75);
+      background: rgba(9,20,15,.95);
+    }
+
+    .table tfoot td{
+      border-top: 1px solid rgba(160,205,180,.22);
+      background: rgba(8,18,14,.82);
+    }
+
+    .table tfoot .grand-qty span,
+    .table tfoot .grand-total span{
+      color: rgba(196,219,206,.82);
+    }
+
+    .table tfoot .total-cell .enterprise-option,
+    .enterprise-option{
+      color: rgba(214,232,221,.90);
+    }
+
+    .enterprise-switch{
+      border: 1px solid rgba(160,205,180,.38);
+      background: rgba(66,96,80,.75);
+    }
+
+    button{
+      border: 1px solid rgba(160,205,180,.28);
+      background: rgba(8,18,14,.72);
+      color: rgba(241,249,244,.95);
+    }
+
+    button:hover{
+      background: rgba(13,28,21,.88);
+    }
+
+    #reset{
+      border-color: rgba(160,205,180,.36);
+      background: rgba(10,22,17,.82);
+    }
+
+    .invoice{
+      background:
+        radial-gradient(700px 300px at 5% -20%, rgba(140,182,159,.16), transparent 66%),
+        linear-gradient(180deg, #1a2c23 0%, #14231c 56%, #0e1b15 100%);
+      border: 1px solid rgba(160,205,180,.24);
+      box-shadow:
+        0 20px 46px rgba(0,0,0,.48),
+        0 0 0 1px rgba(255,255,255,.05) inset;
+      color: rgba(233,245,237,.94);
+    }
+
+    .invoice label,
+    .invoice-copy-hint,
+    .invoice-weight span{
+      color: rgba(196,219,206,.82);
+    }
+
+    #invoiceLine{
+      border: 1px solid rgba(160,205,180,.30);
+      color: rgba(241,249,244,.96);
+      background: rgba(7,16,12,.86);
+    }
+
+    #invoiceLine.copied{
+      border-color: rgba(94,177,128,.72);
+      background: rgba(9,20,15,.95);
     }
 
     @media (max-width: 760px){
